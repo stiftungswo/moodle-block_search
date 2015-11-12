@@ -26,7 +26,6 @@ class DisplayManager
 		$q = false,
 		$courseID = false,
 		$searchInCourse = false,
-		$showAllResults = false,
 		$showOptions = true,
 		$placeholderText = null
 	) {
@@ -70,10 +69,7 @@ class DisplayManager
 
 			$r .= html_writer::start_tag('div', array('class' => 'options'));
 
-			$allowNoAccess = get_config('block_search', 'allow_no_access');
-			$showOptionsTitle = $allowNoAccess || !empty($courseID);
-
-			if ($showOptionsTitle) {
+			if (!empty($courseID)) {
 				$icon = html_writer::tag('i', '', array('class' => 'fa fa-cogs'));
 				$r .= '<strong>' . $icon . ' ' . $this->str('search_options') . '</strong>';
 			}
@@ -118,27 +114,6 @@ class DisplayManager
 					html_writer::empty_tag('input', $inputParams) . $this->str('search_in_course', $courseName)
 				);
 
-			}
-
-			if ($allowNoAccess) {
-				//"Show hidden results" button
-				//We need to make this an array so 'checked' can only be added if necessary
-				$checkboxAttributes = array(
-					'type' => 'checkbox',
-					'name' => 'showHiddenResults',
-					'value' => 1,
-				);
-
-				if ($showAllResults) {
-					$checkboxAttributes['checked'] = 'checked';
-				}
-
-				$checkbox = html_writer::empty_tag('input', $checkboxAttributes);
-
-				$r .= html_writer::tag(
-					'label',
-					$checkbox . $this->str('include_hidden_results')
-				);
 			}
 
 			$r .= html_writer::end_tag('div');
@@ -186,7 +161,7 @@ class DisplayManager
 			if ($tableInfo['hiddenCount'] > 0) {
 				$countLabel = html_writer::tag(
 					'span',
-					$tableInfo['visibleCount'] . ' + ' . $tableInfo['count'] . ' hidden'
+					$tableInfo['count']
 				);
 			} else {
 				$countLabel = html_writer::tag(
@@ -317,9 +292,9 @@ class DisplayManager
 	{
 		$liClasses = '';
 
-		if ($result->hidden) {
-			$liClasses .= ' hideresult';
-		}
+		//if ($result->hidden) {
+		//	$liClasses .= ' hideresult';
+		//}
 
 		$r = html_writer::start_tag('li', array('class' => $liClasses));
 

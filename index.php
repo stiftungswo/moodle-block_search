@@ -22,12 +22,13 @@ $escapedq = htmlentities($q);
 $courseID = optional_param('courseID', 0, PARAM_INT);
 $searchInCourse = optional_param('searchInCourse', false, PARAM_BOOL);
 $pageNum = optional_param('page', 0, PARAM_INT);
-$showHiddenResults = optional_param('showHiddenResults', false, PARAM_BOOL);
 
 $perPage = (int)get_config('block_search', 'results_per_page');
 
 if (!get_config('block_search', 'allow_no_access')) {
 	$showHiddenResults = false;
+} else {
+	$showHiddenResults = true;
 }
 
 if ($courseID) {
@@ -69,7 +70,7 @@ $PAGE->set_heading(get_string('pagetitle', $searchBlock->blockName));
 echo $OUTPUT->header();
 echo html_writer::start_tag('div', array('id' => $searchBlock->blockName));
 
-echo $searchBlock->display->showSearchBox($q, $courseID, $searchInCourse, $showHiddenResults);
+echo $searchBlock->display->showSearchBox($q, $courseID, $searchInCourse);
 
 if (!empty($q)) {
 
@@ -167,10 +168,6 @@ if (!empty($q)) {
 
 			echo $OUTPUT->render($pagingbar);
 
-			/*
-			 * Advanced Search Options
-			 */
-			echo $searchBlock->display->showAdvancedOptions();
 
 		echo html_writer::end_tag('div');
 	}
